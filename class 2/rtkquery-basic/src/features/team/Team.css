@@ -1,0 +1,12 @@
+.teamListBox {
+  width: 300px;
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+
+.teamList {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
