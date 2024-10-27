@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useGetSingleTeamMemberQuery } from "./teamApiSlice.js";
 
 const SingleTeam = () => {
@@ -22,7 +22,14 @@ const SingleTeam = () => {
     );
   }
 
-  return <>{content}</>;
+  return (
+    <>
+      <Link to="/" style={{ marginBottom: "20px" }}>
+        Back
+      </Link>
+      {content}
+    </>
+  );
 };
 
 export default SingleTeam;

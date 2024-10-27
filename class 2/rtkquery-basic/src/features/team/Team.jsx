@@ -1,12 +1,20 @@
 import { Link } from "react-router-dom";
 import "./Team.css";
-import { useGetAllTeamMembersQuery } from "./teamApiSlice.js";
+import {
+  useCreateTeamMemberMutation,
+  useDeleteTeamMemberMutation,
+  useGetAllTeamMembersQuery,
+} from "./teamApiSlice.js";
 import { useState } from "react";
 
 const Team = () => {
   // get all tem members
   const { data, isError, isLoading, isSuccess, error } =
-    useGetAllTeamMembersQuery();
+    useGetAllTeamMembersQuery(null, {
+      refetchOnMountOrArgChange: 60,
+    });
+  // delete a team member
+  const [deleteTeamMember] = useDeleteTeamMemberMutation();
 
   let content = "";
 
@@ -25,6 +33,7 @@ const Team = () => {
             <Link to={`/team/${member._id}`}>Name: {member.name}</Link>
           </h2>
           <p>Email: {member.email}</p>
+          <button onClick={() => deleteTeamMember(member._id)}>Delete</button>
         </div>
       );
     });
@@ -45,11 +54,37 @@ const Team = () => {
     }));
   };
 
+  const [
+    createTeamMember,
+    {
+      data: createData,
+      isError: createIsError,
+      isLoading: createLoading,
+      isSuccess: createSuccess,
+      error: createError,
+    },
+  ] = useCreateTeamMemberMutation();
+
+  if (createLoading) {
+    content = <p>Loading...</p>;
+  }
+  if (createIsError) {
+    console.log(createError?.data?.message);
+  }
+  if (createSuccess) {
+    console.log(createData);
+  }
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    createTeamMember(input);
+  };
+
   return (
     <>
       <h1>Add New Team</h1>
       <hr />
-      <form action="">
+      <form onSubmit={handleFormSubmit}>
         <input
           type="text"
           placeholder="Name"
